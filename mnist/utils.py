@@ -16,7 +16,7 @@ def load_model(model_path, device=None):
         tuple: (model, device)
     """
     if device is None:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = MNISTNet().to(device)
     model.load_state_dict(torch.load(model_path, map_location=device))
@@ -71,9 +71,11 @@ def visualize_sample_predictions(model, device, num_samples=5):
         data, true_label = next(iter(test_loader))
         predicted_class, confidence, _ = predict_single_image(model, device, data)
 
-        axes[i].imshow(data.squeeze().numpy(), cmap='gray')
-        axes[i].set_title(f'True: {true_label.item()}\nPred: {predicted_class}\nConf: {confidence:.3f}')
-        axes[i].axis('off')
+        axes[i].imshow(data.squeeze().numpy(), cmap="gray")
+        axes[i].set_title(
+            f"True: {true_label.item()}\nPred: {predicted_class}\nConf: {confidence:.3f}"
+        )
+        axes[i].axis("off")
 
     plt.tight_layout()
     plt.show()
@@ -90,11 +92,11 @@ def prepare_for_sensitivity_analysis(model_path=None, sample_index=0):
         model, device = load_model(model_path)
     else:
         # Return a randomly initialized model for testing
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = MNISTNet().to(device)
         model.eval()
 
-    sample_image, sample_label = get_single_sample('test', sample_index)
+    sample_image, sample_label = get_single_sample("test", sample_index)
 
     # Enable gradient computation for sensitivity analysis
     sample_image.requires_grad_(True)

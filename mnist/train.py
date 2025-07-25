@@ -26,15 +26,18 @@ def train_epoch(model, device, train_loader, optimizer, criterion, epoch, verbos
         correct += pred.eq(target.view_as(pred)).sum().item()
 
         if verbose and batch_idx % 100 == 0:
-            print(f'Train Epoch: {epoch} [{batch_idx * len(data)}/{len(train_loader.dataset)} '
-                  f'({100. * batch_idx / len(train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
+            print(
+                f"Train Epoch: {epoch} [{batch_idx * len(data)}/{len(train_loader.dataset)} "
+                f"({100.0 * batch_idx / len(train_loader):.0f}%)]\tLoss: {loss.item():.6f}"
+            )
 
     train_loss /= len(train_loader)
-    accuracy = 100. * correct / len(train_loader.dataset)
+    accuracy = 100.0 * correct / len(train_loader.dataset)
 
     if verbose:
         print(
-            f'Train set: Average loss: {train_loss:.4f}, Accuracy: {correct}/{len(train_loader.dataset)} ({accuracy:.2f}%)')
+            f"Train set: Average loss: {train_loss:.4f}, Accuracy: {correct}/{len(train_loader.dataset)} ({accuracy:.2f}%)"
+        )
 
     return train_loss, accuracy
 
@@ -54,16 +57,19 @@ def test_epoch(model, device, test_loader, criterion, verbose=True):
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader)
-    accuracy = 100. * correct / len(test_loader.dataset)
+    accuracy = 100.0 * correct / len(test_loader.dataset)
 
     if verbose:
         print(
-            f'Test set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({accuracy:.2f}%)')
+            f"Test set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({accuracy:.2f}%)"
+        )
 
     return test_loss, accuracy
 
 
-def train_model(num_epochs=5, batch_size=64, learning_rate=0.001, save_path=None, device=None):
+def train_model(
+    num_epochs=5, batch_size=64, learning_rate=0.001, save_path=None, device=None
+):
     """
     Complete training pipeline for MNIST
 
@@ -78,7 +84,7 @@ def train_model(num_epochs=5, batch_size=64, learning_rate=0.001, save_path=None
         tuple: (trained_model, training_history)
     """
     if device is None:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     print(f"Training on device: {device}")
 
@@ -91,22 +97,19 @@ def train_model(num_epochs=5, batch_size=64, learning_rate=0.001, save_path=None
     criterion = nn.NLLLoss()
 
     # Training history
-    history = {
-        'train_loss': [],
-        'train_acc': [],
-        'test_loss': [],
-        'test_acc': []
-    }
+    history = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
 
     print("Starting training...")
     for epoch in range(1, num_epochs + 1):
-        train_loss, train_acc = train_epoch(model, device, train_loader, optimizer, criterion, epoch)
+        train_loss, train_acc = train_epoch(
+            model, device, train_loader, optimizer, criterion, epoch
+        )
         test_loss, test_acc = test_epoch(model, device, test_loader, criterion)
 
-        history['train_loss'].append(train_loss)
-        history['train_acc'].append(train_acc)
-        history['test_loss'].append(test_loss)
-        history['test_acc'].append(test_acc)
+        history["train_loss"].append(train_loss)
+        history["train_acc"].append(train_acc)
+        history["test_loss"].append(test_loss)
+        history["test_acc"].append(test_acc)
 
         print("-" * 50)
 

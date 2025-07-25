@@ -7,7 +7,9 @@ class MNISTNet(nn.Module):
     Simple feedforward neural network for MNIST digit classification
     """
 
-    def __init__(self, input_size=784, hidden1=128, hidden2=64, num_classes=10, dropout_rate=0.2):
+    def __init__(
+        self, input_size=784, hidden1=128, hidden2=64, num_classes=10, dropout_rate=0.2
+    ):
         super(MNISTNet, self).__init__()
         self.input_size = input_size
         self.fc1 = nn.Linear(input_size, hidden1)
@@ -40,9 +42,9 @@ class MNISTNet(nn.Module):
         output = self.fc3(h2_dropped)
 
         return {
-            'input': x,
-            'hidden1': h1,
-            'hidden2': h2,
-            'output': output,
-            'log_softmax': F.log_softmax(output, dim=1)
+            "input": x,
+            "hidden1": h1,
+            "hidden2": h2,
+            "output": output,
+            "log_softmax": F.log_softmax(output, dim=1),
         }
