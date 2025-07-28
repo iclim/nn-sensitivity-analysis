@@ -1,6 +1,8 @@
 import argparse
 import sys
+
 from mnist.sensitivity import run_sensitivity_analysis as mnist_sensitivity
+from wine.sensitivity import run_sensitivity_analysis as wine_sensitivity
 
 
 def run_mnist_analysis(args):
@@ -37,11 +39,29 @@ def run_mnist_analysis(args):
             all_results.append(results)
 
         # Print summary
-        print_multi_sample_summary(all_results)
+        print_multi_mnist_summary(all_results)
         return all_results
 
 
-def print_multi_sample_summary(results_list):
+def run_wine_analysis(args):
+    """Run sensitivity analysis on Wine dataset"""
+
+    print("Running Wine Quality Feature Sensitivity Analysis")
+    print("=" * 50)
+
+    # Wine analysis is always dataset-wide, so multiple_samples doesn't apply
+    results = wine_sensitivity(
+        model_path=args.model_path,
+        scaler_path=getattr(args, "scaler_path", None),
+        save_dir=f"{args.save_dir}/wine",
+        show_plots=not args.no_display,
+        target_class=args.target_class,
+    )
+
+    return results
+
+
+def print_multi_mnist_summary(results_list):
     """Print summary statistics for multiple sample analysis"""
     print("\n" + "=" * 60)
     print("MULTI-SAMPLE ANALYSIS SUMMARY")
@@ -126,7 +146,7 @@ Examples:
     # Dataset selection
     parser.add_argument(
         "--dataset",
-        choices=["mnist"],
+        choices=["mnist", "wine"],
         default="mnist",
         help="Dataset to analyze (default: mnist)",
     )
@@ -138,19 +158,25 @@ Examples:
         default=None,
         help="Path to trained model (if not provided, will train new model)",
     )
+    parser.add_argument(
+        "--scaler-path",
+        type=str,
+        default=None,
+        help="Path to saved scaler (for wine dataset)",
+    )
 
-    # Sample selection
+    # Sample selection (MNIST only)
     parser.add_argument(
         "--sample-index",
         type=int,
         default=0,
-        help="Index of sample to analyze (default: 0)",
+        help="Index of sample to analyze (MNIST only, default: 0)",
     )
     parser.add_argument(
         "--multiple-samples",
         type=int,
         default=1,
-        help="Number of samples to analyze (default: 1)",
+        help="Number of samples to analyze (MNIST only, default: 1)",
     )
 
     # Analysis configuration
@@ -181,9 +207,16 @@ Examples:
     print("=" * 50)
     print(f"Dataset: {args.dataset}")
     print(f"Model path: {args.model_path or 'Will train new model'}")
-    print(f"Samples to analyze: {args.multiple_samples}")
-    if args.target_class is not None:
-        print(f"Target class: {args.target_class}")
+
+    if args.dataset == "mnist":
+        print(f"Samples to analyze: {args.multiple_samples}")
+        if args.target_class is not None:
+            print(f"Target class: {args.target_class}")
+    elif args.dataset == "wine":
+        print("Analysis type: Entire dataset feature sensitivity")
+        if args.target_class is not None:
+            print(f"Target class: {args.target_class}")
+
     print(f"Save directory: {args.save_dir}")
     print()
 
@@ -191,16 +224,18 @@ Examples:
     try:
         if args.dataset == "mnist":
             results = run_mnist_analysis(args)
-            if results:
-                print(f"\n✓ Analysis completed successfully!")
-                if args.save_dir:
-                    output_dir = f"{args.save_dir} / {args.dataset}"
-                    print(f"  Results saved to: {output_dir}")
-            else:
-                print(f"\n✗ Analysis failed!")
-                sys.exit(1)
+        elif args.dataset == "wine":
+            results = run_wine_analysis(args)
         else:
             print(f"Dataset '{args.dataset}' not yet implemented")
+            sys.exit(1)
+
+        if results:
+            print(f"\n✓ Analysis completed successfully!")
+            if args.save_dir:
+                print(f"  Results saved to: {args.save_dir}")
+        else:
+            print(f"\n✗ Analysis failed!")
             sys.exit(1)
 
     except KeyboardInterrupt:
