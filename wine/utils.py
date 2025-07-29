@@ -1,6 +1,10 @@
 import torch
 from .model import WineNet
-from .dataset import get_wine_dataloaders, get_full_dataset_for_analysis, get_feature_names
+from .dataset import (
+    get_wine_dataloaders,
+    get_full_dataset_for_analysis,
+    get_feature_names,
+)
 import pickle
 import os
 
@@ -89,6 +93,5 @@ def prepare_for_sensitivity_analysis(model_path=None, scaler_path=None):
         # Get scaler from dataset
         X, y, scaler, feature_names = get_wine_dataloaders()
         X_scaled = scaler.transform(X)
-
 
     return model, device, X_scaled, y, scaler, feature_names

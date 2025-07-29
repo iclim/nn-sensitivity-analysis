@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from .model import MNISTNet
-from .dataset import get_mnist_dataloaders
 import os
 
 

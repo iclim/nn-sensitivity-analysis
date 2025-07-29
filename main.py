@@ -134,13 +134,6 @@ def main():
     parser = argparse.ArgumentParser(
         description="Run derivative-based sensitivity analysis",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python main.py --dataset mnist
-  python main.py --dataset mnist --model-path mnist/saved_models/model.pth
-  python main.py --dataset mnist --sample-index 42 --target-class 3
-  python main.py --dataset mnist --multiple-samples 10 --save-dir results/
-        """,
     )
 
     # Dataset selection

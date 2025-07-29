@@ -8,20 +8,21 @@ from sklearn.preprocessing import StandardScaler
 def get_feature_names():
     """Get wine dataset feature names"""
     return [
-        'alcohol',
-        'malic_acid',
-        'ash',
-        'alcalinity_of_ash',
-        'magnesium',
-        'total_phenols',
-        'flavanoids',
-        'nonflavanoid_phenols',
-        'proanthocyanins',
-        'color_intensity',
-        'hue',
-        'od280/od315_of_diluted_wines',
-        'proline'
+        "alcohol",
+        "malic_acid",
+        "ash",
+        "alcalinity_of_ash",
+        "magnesium",
+        "total_phenols",
+        "flavanoids",
+        "nonflavanoid_phenols",
+        "proanthocyanins",
+        "color_intensity",
+        "hue",
+        "od280/od315_of_diluted_wines",
+        "proline",
     ]
+
 
 def get_full_dataset_for_analysis():
     """
@@ -35,8 +36,8 @@ def get_full_dataset_for_analysis():
     feature_names = wine_data.feature_names
     scaler = StandardScaler()
 
-
     return X, y, scaler, feature_names
+
 
 def get_wine_dataloaders(batch_size=32, test_size=0.2, random_state=42):
     """
